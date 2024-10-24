@@ -1,70 +1,59 @@
 <script setup lang="ts">
-const { loggedIn } = useUserSession()
-const colorMode = useColorMode()
+const { loggedIn } = useUserSession();
 
-watch(loggedIn, () => {
+watch(loggedIn, async () => {
   if (!loggedIn.value) {
-    navigateTo('/')
+    await navigateTo("/login");
   }
-})
-
-function toggleColorMode() {
-  colorMode.preference = colorMode.preference === 'dark' ? 'light' : 'dark'
-}
+});
 
 useHead({
-  htmlAttrs: { lang: 'en' },
-  link: [{ rel: 'icon', href: '/icon.png' }]
-})
+  htmlAttrs: { lang: "pt-BR" }
+});
 
-useSeoMeta({
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
-  title: 'Atidone',
-  description:
-    'A Nuxt demo hosted with edge-side rendering, authentication and queyring a Cloudflare D1 database',
-  ogImage: '/social-image.png',
-  twitterImage: '/social-image.png',
-  twitterCard: 'summary_large_image'
-})
+const items = [[]];
 </script>
 
 <template>
-  <UContainer class="min-h-screen flex flex-col justify-center">
-    <div class="mb-2 text-right">
-      <UButton
-        square
-        variant="ghost"
-        color="black"
-        :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
-        @click="toggleColorMode"
-      />
-    </div>
+  <div class="p-2 flex flex-col gap-4">
+    <NuxtRouteAnnouncer />
 
-    <NuxtPage />
+    <header class="flex justify-between">
+      <h1 class="text-black text-2xl">Receitas</h1>
 
-    <footer class="text-center mt-2">
-      <NuxtLink
-        href="https://github.com/atinux/atidone"
-        target="_blank"
-        class="text-sm text-gray-500 hover:text-gray-700"
-      >
-        GitHub
-      </NuxtLink>
-      ·
-      <NuxtLink
-        href="https://twitter.com/atinux"
-        target="_blank"
-        class="text-sm text-gray-500 hover:text-gray-700"
-      >
-        Twitter
-      </NuxtLink>
-    </footer>
-  </UContainer>
-  <UNotifications />
+      <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+        <UButton color="white" icon="i-heroicons-ellipsis-vertical-16-solid" />
+      </UDropdown>
+    </header>
+    <main><NuxtPage /></main>
+
+    <UNotifications />
+  </div>
 </template>
 
-<style lang="postcss">
+<style>
+:root {
+  --bg: #f4f0e8;
+}
+
+html,
 body {
-  @apply font-sans text-gray-950 bg-gray-50 dark:bg-gray-950 dark:text-gray-50;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+html {
+  font-family: "Sometype Mono Variable", monospace !important;
+  font-style: normal;
+  font-display: optional;
+  background: var(--bg);
+  font-size: clamp(14px, 1.5vw, 16px);
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    font-variation-settings: "wdth" 75, "wght" 400 700;
+  }
 }
 </style>
